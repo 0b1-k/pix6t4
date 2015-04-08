@@ -1,0 +1,314 @@
+
+<!DOCTYPE html> 
+<html lang="en-US" class="static detail-page contents"> 
+<head> 
+    <meta charset="utf-8" />
+    <title>PIX-6T4-Deploying and Debugging Your Code</title> 
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans%7CSlackey&amp;subset=latin" rel="stylesheet" type="text/css" />
+<link href="Themes/PIX6T4/Styles/Site.css" rel="stylesheet" type="text/css" />
+<!--[if lt IE 9]>
+<script src="/Core/Shapes/scripts/html5.js" type="text/javascript"></script>
+<![endif]-->
+<meta content="Orchard" name="generator" />
+<meta content="IE=edge,chrome=1" name="X-UA-Compatible" />
+<link href="media/PIX6T4/favicon/favicon.gif" rel="shortcut icon" type="image/x-icon" />
+
+    <script>(function(d){d.className="dyn"+d.className.substring(6,d.className.length);})(document.documentElement);</script> 
+</head> 
+<body>
+
+
+<div id="layout-wrapper">
+<header id="layout-header" class="group">
+    <div id="header">
+        <div class="zone zone-header">
+<h1 id="branding">
+    <a href="index.html">
+        <span id="punchline">
+            <strong>PIX-6T4:</strong>
+            A Platform for Learning Digital Electronics and C#
+        </span>
+        <img id="logo" src="Themes/PIX6T4/Content/logo.gif" alt="PIX-6T4" />
+        <img id="revolution" src="Themes/PIX6T4/Content/revolution.gif" alt="Join the Maker Revolution!"/>
+        <img id="explode" src="Themes/PIX6T4/Content/explode.gif" alt="Build Your OWN Gaming Console!"/>
+    </a>
+</h1>
+
+<div class="user-display">
+        <span class="user-actions"><a href="Users/Account/LogOn%3FReturnUrl=%252Fdeploy-and-debug.html" rel="nofollow">Sign In</a></span>
+</div>
+</div>
+    </div>
+</header>
+<div id="layout-navigation" class="group">
+    <div class="zone zone-navigation">
+<article class="widget-navigation widget-menu-widget widget">
+    
+<nav>
+    <ul class="menu menu-main-menu">
+        
+        
+<li class="first"><a href="index.html">Home</a>
+</li>
+<li><a href="http://nwazet.com/pix6t4">Buy</a>
+</li>
+<li><a href="blog.html">Blog</a>
+</li>
+<li><a href="video.html">Videos</a>
+</li>
+<li class="current last"><a href="docs.html">Docs</a>
+</li>
+    </ul>
+</nav>
+</article></div>
+</div>
+<div id="layout-main-container">
+<div id="layout-main" class="group">
+    <div id="layout-content" class="group">
+                        <div id="content" class="group">
+            <div class="zone zone-content">
+<article class="page content-item">
+    <header>
+        
+
+<h1>Deploying and Debugging Your Code</h1>
+
+
+    </header>
+    <p></p>
+<p>Debugging is a generic term for a process used to find the root causes of defects in a system. The system in question could be hardware, software or just about any kind of process. In the context of the Pix-6T4, we&rsquo;re going to focus on software debugging for the most part but we&rsquo;ll also discuss hardware debugging: even though the symptoms, root causes and tools will be different, the methodology will be similar.</p>
+<h1>Debugging on the Netduino with Visual C#&nbsp;</h1>
+<p>Debugging embedded system software can be a slow and tedious process on platforms where an interactive debugging tool is not available: in that case, the developer is often forced to spend time instrumenting the defective code with &lsquo;breadcrumbs&rsquo; designed to leave traces of its execution in a file or directly to a terminal emulator. It&rsquo;s up to the developer to follow that breadcrumb trail to understand where things went wrong, repeating the process until the problem is discovered. Eventually, the breadcrumbs have to be removed before the application is released to production as verbose tracing tends to slow down the execution of the program. Fortunately for us, Visual Studio has an outstanding interactive debugger which enables us to execute programs step-by-step, to stop at any point, to examine and alter the state of variables along the way without the overhead of instrumenting the code with tracing statement every time something goes wrong. On the Netduino mini, all debugging takes places over a serial port. For this reason, there are two serial ports on the Netduino mini to prevent interferences between &lsquo;debugger messages&rsquo; and &lsquo;application messages&rsquo; which would otherwise collide if they were to be sent over the same port.</p>
+<p>On the Pix-6T4 console, we chose to use COM1, the RS232 serial port, for deployment and debugging code.</p>
+<p><img src="media/PIX6T4/Images/Debugging/netduino&#32;mini&#32;COM&#32;ports.png" alt="" /></p>
+<p>In order to use the Netduino mini&rsquo;s RS232 port, you will need a USB to RS232 adapter cable unless your machine has a built-in RS232 DB9 connector. Such connectors are getting more and more rare, especially on laptops. The good news is that USB to RS232 cables can be found at very good prices. <a href="http://www.monoprice.com/products/product.asp?c_id=103&amp;cp_id=10311&amp;cs_id=1031104&amp;p_id=2067&amp;seq=1&amp;format=2" target="_blank">For instance, Monoprice carries them for less than $10</a>&nbsp;</p>
+<p></p>
+<h2>Connecting the USB to RS232 adapter cable to the Netduino</h2>
+<p>Using three female prototyping wires, connect the DB9 end of the USB-to-RS232 cable to the Netduino-mini header pins as shown on this diagram:</p>
+<p><img src="media/PIX6T4/Images/Debugging/RS-232.png" alt="" width="800" /></p>
+<p>The DB9 end of the cable should look like this:</p>
+<p><img src="media/PIX6T4/Images/Debugging/DB9-FemaleProtoWires.jpg" alt="" height="241" /></p>
+<p>On the Netduino mini side, it should look like this:</p>
+<p><img src="media/PIX6T4/Images/Debugging/RS232-netduino-mini-COM1.jpg" alt="" height="195" /></p>
+<p>Once all the connections have been made, plug-in the USB end of the USB-to-RS232 cable into your computer. In some instances, you may need to install a driver coming with the cable first. When you plug the cable in, Windows will search for the appropriate driver and will assign a serial communication port to the USB device:</p>
+<p><img src="media/PIX6T4/Images/Debugging/USB-RS232-ComPort.png" alt="" height="210" /></p>
+<p>You can find out which COM port is assigned to the cable at anytime by opening the &ldquo;Devices and Printers&rdquo; (USB plug icon) from the system tray. Make a note of this communication port as we will need to configure Visual C# in the next section.</p>
+<p></p>
+<h2>Testing the serial connection to the Netduino</h2>
+<p>Before going any further, it&rsquo;s good to ensure that the serial cable wiring to the Netduino is correct and that everything works. To this end, the .Net Micro Framework SDK offer a tool called &ldquo;MFDeploy.exe&rdquo;, which is perfect for that purpose.&nbsp;</p>
+<ul>
+<li>In the Start Menu,&nbsp;locate the &ldquo;Microsoft .Net Micro Framework 4.x&rdquo; menu item and expand it</li>
+<li>Clicking on the &ldquo;Tools&rdquo; menu will open up Explorer</li>
+<li>In the &ldquo;Tools&rdquo; directory, start &ldquo;MFDeploy.exe&rdquo;. Be careful as there are multiple files named &ldquo;MFDeploy&rdquo; in that location, which might be confusing if the file extensions aren&rsquo;t visible.</li>
+<li>In MFDeploy.exe, in the &ldquo;Device&rdquo; section of the dialog, select &ldquo;Serial&rdquo; and assign the communication port corresponding to the USB-to-RS232 cable.</li>
+</ul>
+<p><img src="media/PIX6T4/Images/Debugging/MFDeploy.png" alt="" height="392" /></p>
+<p>Click on the &ldquo;Ping&rdquo; button. If everything is correctly wired up and assigned, MFDeploy will display &ldquo;<strong>Pinging... TinyCLR</strong>&rdquo; in its output window. If this is not the case, MFDeploy, will eventually time out. You need to go back to the beginning of this section and double-check connections and COM port assignments, starting with making sure that the &ldquo;send&rdquo; and &ldquo;receive&rdquo; wires have not been swapped by mistake.</p>
+<p></p>
+<h2>Configuring Visual C# for communication with the Netduino mini</h2>
+<p>In Visual C#, bring up the properties for any given project from the Project menu:</p>
+<p><img src="media/PIX6T4/Images/Debugging/VCSharpProjectProperties.png" alt="" height="214" /></p>
+<p>In the Project Properties page, click on the &ldquo;.Net Micro Framework&rdquo; tab and in the &ldquo;Deployment&rdquo; section:</p>
+<ul>
+<li>Select &ldquo;Serial&rdquo; for the &ldquo;Transport&rdquo; option</li>
+<li>Assign the COM port assigned to the USB-to-RS232 cable to the &ldquo;Device&rdquo; option COM7 in this case</li>
+<li>Make sure to save these changes before closing the Project Properties page</li>
+</ul>
+<p>At this point, the project can be deployed to the Netduino mini or can be debugged.</p>
+<p></p>
+<h2>Setting Breakpoints</h2>
+<p>On any given line of code in a project, hitting F9, or clicking in the gray margin all the way to the left, will place a red dot in front of the line and will highlight it. This will cause the execution of the program to stop when it reaches it.</p>
+<p><img src="media/PIX6T4/Images/Debugging/VCSharpSettingBreakpoints.png" alt="" height="111" /></p>
+<p></p>
+<h2>Starting the debugger</h2>
+<p>Hitting F5 in Visual C# will start a debugging session.&nbsp;It will also cause in a number of things to happen before the debugger starts:</p>
+<ul>
+<li>The solution will be compiled if needed</li>
+<li>The solution will be deployed to the Netduino mini. Deploying is the term describing the process of copying the binary files making up the application to the flash memory of the microcontroller</li>
+<li>The application will begin execution under the control of the debugger</li>
+</ul>
+<p></p>
+<h2>Stepping In, Out and Over code</h2>
+<p>During the execution of the application, whenever a breakpoint is encountered, marked by a yellow pointer, you will have a few options:</p>
+<p><img src="media/PIX6T4/Images/Debugging/VCSharpBreakpointStop.png" alt="" height="83" /></p>
+<ul>
+<li><strong>Stepping In (F11)</strong>: if the breakpoint is set on a line where a function will be called, the next step the debugger will take will be to enter the function, stopping on the first line:</li>
+<li><strong>Stepping Over (F10)</strong>: will cause the program execution to move to the next statement and stop. When stepping over a function which has a breakpoint defined within it, the debugger will also stop on that breakpoint.</li>
+<li><strong>Stepping Out (Shift+F11)</strong>: whenever the execution of the program is stopped within a function, hitting Shift+F11 will cause the debugger to exit the function immediately and stop on the statement following the function call.</li>
+<li><strong>Resuming the Execution (F5)</strong>: if a debug session is in progress and has stopped on a breakpoint, hitting F5 will cause the execution of the program to continue until the next breakpoint is encountered.</li>
+<li><strong>Stopping the debugger (Shift+F5)</strong>: at any time during a debugging session, hitting Shift+F5 will stop the execution of the program under the control of the debugger.</li>
+</ul>
+<p></p>
+<h2>Watching and changing variables at run time</h2>
+<ul>
+<li>It is possible to examine any variable within the scope of the debugger by hovering with the mouse cursor over it. In the example below, the &lsquo;folders&rsquo; variable is being examined</li>
+<li>If a variable is to be accessed often, using the &lsquo;pin&rsquo; icon will ensure that the variable remains accessible at all times in the editor while the debugger is running. A blue pin will be shown in the margin</li>
+<li>Hovering over the blue pin will show the last known value of the variable even if the debugger is no longer running</li>
+<li>Pinned variables allow for commenting, also known as DataTips</li>
+<li>It is also possible to create a variable &lsquo;watch&rsquo; by right-clicking on the variable and selecting &lsquo;Add Watch&rsquo;, causing the &lsquo;Watch&rsquo; window to appear with the newly added variable</li>
+<li>It is possible to change the value of a variable at any time by right-clicking on it and selecting &lsquo;Edit Value&rsquo;. Be careful when doing this as unexpected values may cause exceptions in the application</li>
+</ul>
+<p>For example, consider the scenario where a configuration string is being used to initialize two specific variables named &lsquo;foo&rsquo; and &lsquo;bar&rsquo;:</p>
+<pre>&nbsp; &nbsp; &nbsp; &nbsp; enum ConfigIndex {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Foo,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Bar,
+&nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; &nbsp; public static void Main() {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; var config = "foo=123,bar=456";
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; var configPairs = config.Split(new char[] { ',' });
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; var foo = configPairs[(int) ConfigIndex.Foo].Split(new char[] { '=' })[1];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; var bar = configPairs[(int)ConfigIndex.Bar].Split(new char[] { '=' })[1];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Debug.Print("Configuration: foo=" + foo + ", bar=" + bar);
+&nbsp; &nbsp; &nbsp; &nbsp; }
+</pre>
+<p>If the program runs as-is, everything works fine and the output window shows:</p>
+<pre>Configuration: foo=123, bar=456</pre>
+<p>Now, imagine that during a debugging session, the &lsquo;config&rsquo; string is edited and &lsquo;bar&rsquo; is removed from it:</p>
+<pre>var config = "foo=123";</pre>
+<p>The code which expects to find and assign a value to &lsquo;var bar&rsquo; will be unhappy and will throw an exception like this:</p>
+<pre>&nbsp; &nbsp; #### Exception System.IndexOutOfRangeException - 0xa9000000 (1) ####
+&nbsp; &nbsp; #### Message:&nbsp;
+&nbsp; &nbsp; #### XBeeTest.Program::Main [IP: 0032] ####
+A first chance exception of type 'System.IndexOutOfRangeException' occurred in XBeeTest.exe
+An unhandled exception of type 'System.IndexOutOfRangeException' occurred in XBeeTest.exe
+</pre>
+<pre></pre>
+<h2>Debugging Strategies</h2>
+<p>The mechanics of working with the debugger are simple to understand. The real work is finding the cause of the issue(s) causing an application to malfunction. To this end, there are various debugging strategies to consider as well as general guidelines that will tend to hold true in most cases:</p>
+<ul>
+<li>Reducing the number of variables: if your program&rsquo;s logic manipulates many variables, it will be useful to isolate which ones are directly related to the issue you&rsquo;re trying to debug. By reducing complexity in this fashion, it will be easier to track the relevant state changes leading to the identification of the root cause.</li>
+<li>Only change one thing at a time and observe the effects of that change: as issues are identified in the program, multiple changes to the code may be necessary to resolve problems. However, it is advisable to only alter the code&rsquo;s logic in a single area at a time, then taking another pass with the debugger to ensure that the change had the desired effect and that everything else continues to work properly. When altering the data in a variable, the same discipline needs to be followed: only change one specific value at a time and observe the effect of the change on the program&rsquo;s flow and response. You also must ensure that independent variables remain unchanged. If a changed variable has dependent variables, you will need to observe carefully the effects of changing that variable on the others.</li>
+<li>Keep in mind that multiple passes may be required before the root of an issue becomes apparent, so patience is key.</li>
+</ul>
+<p></p>
+<h2>Where to place breakpoints?</h2>
+<p>Place a breakpoint at a location in the code just before the problem appears. Then, slowly step through the code, one line at a time, reviewing the logic of the application and the content of the variables against the expected behavior of the application. If you&rsquo;re not exactly sure where the issue starts, set multiple breakpoints at key locations in the application where you can observe the behavior before resuming execution. Eventually, you will narrow down which section of the code is problematic.</p>
+<h2>Breaking down complexity</h2>
+<p>Sometimes, an application can become too large, with too many functions or too many variables at the same level or functions that are too long, which may make the logic of the application difficult to understand and debugging a painful exercise. When this happens, it&rsquo;s good to step back and rethink the overall design of the application itself, breaking it down into smaller objects, each one specializing in a single task and only handling the variables that it needs for that specific task.</p>
+<p>This programming style is known as Object Oriented Programming and is a deep subject in itself, beyond the scope of this book. There are many online resources that explain what OOP is, how to apply it. BlackWasp (http://www.blackwasp.co.uk/CSharpObjectOriented.aspx) has excellent free tutorials on the subject, focusing on C#.</p>
+<p></p>
+<h2>Tracing</h2>
+<p>On occasions, it may be useful to add tracing to the application and Visual C# makes it easy to add debug-only functions for this purpose which will be automatically removed from the code when it is compiled in Release mode.&nbsp;</p>
+<p>Add a &ldquo;using System.Diagnostics;&rdquo; statement at the beginning of the file where tracing will be used, then&nbsp;create a function like this</p>
+<pre>&nbsp; [Conditional("DEBUG")]
+&nbsp; private static void DebugTrace(string logMessage) {
+&nbsp; &nbsp; &nbsp; &nbsp; Debug.Print(logMessage);
+&nbsp; &nbsp; }
+</pre>
+<p>Call DebugTrace() with any desired message wherever a trace is needed such as the beginning and the end of a function. In this sample, Debug.Print() is used but writing to a file on the SD card or writing data to a secondary serial port would be equally effective.</p>
+<p>The output of Debug.Print() goes to the Output Window of Visual C#:</p>
+<p><img src="media/PIX6T4/Images/Debugging/VCSharpOutputWindow.png" alt="" height="319" /></p>
+<p>Note that the Conditional attribute can only be applied to functions with a void return type.</p>
+<p></p>
+<h2>Using Assertions</h2>
+<p>An assertion is a debug statement in the code which evaluates a condition and expects the result to be &lsquo;true&rsquo;. If the result of the evaluation is &lsquo;true&rsquo;, nothing happens and the debugger skips the assertion statement. If the evaluation returns &lsquo;false&rsquo;, the debugger stops on the line with the assertion. Consider the following example:</p>
+<p><img src="media/PIX6T4/Images/Debugging/VCSharpAssert.png" alt="" height="48" /></p>
+<p>The Debug.Assert() statement expects the variable &lsquo;assertionTest&rsquo; to be greater than 999. However, the variable was initialized with a value of 123. As a result, the debugger halts on the line. Assertions such as this one enable the developer to validate assumptions about a program during development, identifying potential problems early on. Assertion statements are eliminated from the code when it is compiled in Release mode, so there&rsquo;s no runtime overhead or unexpected stops to be concerned about once the application is being used in the field.</p>
+<p></p>
+<h2>Overriding ToString()</h2>
+<p>ToString() is a handy function supported by every object type in C#. When used with simple data types such as integers, floats, strings, ToString() produces a string representation of the data held in the variable. On Class types, ToString() returns a string representing the name space and the name of the class. In the latter case, this behavior may not be desirable when many instances of the same object class exist as there&rsquo;s nothing to distinguish between them. It would be more useful to show the values of important properties or fields within the class instead.</p>
+<p>This is where overriding ToString() comes into play. Consider the function in bold below:</p>
+<pre>&nbsp; &nbsp; public class Foo {
+&nbsp; &nbsp; &nbsp; &nbsp; public int Bar { get; set; }
+&nbsp; &nbsp; &nbsp; &nbsp; public Foo() {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Bar = 123;
+&nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; &nbsp; public override string ToString() {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; return base.ToString() + "= " + Bar.ToString();
+&nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; }
+</pre>
+<p>The behavior of ToString() for class Foo is redefined using the &lsquo;override&rsquo; keyword and filling out the body of the function with a custom code: base.ToString() still returns the name space and name of the class but now, we&rsquo;re also adding to it the content of the Bar property.</p>
+<pre>var foo = new Foo();
+Debug.Print(foo.ToString());</pre>
+<pre>Creating an instance of Foo() and calling ToString() now results in this output:
+&ldquo;ConsoleBootLoader.Foo= 123&rdquo;</pre>
+<pre>Without overriding ToString(), the output would have been a plain &ldquo;ConsoleBootLoader.Foo&rdquo; without any other information.
+</pre>
+<p></p>
+<h2>Using the DebuggerDisplay attribute</h2>
+<p>There are occasions when overriding ToString() strictly for debugging purposes is not an option because it is needed as part of the core functionality of the application. This is where using the &lsquo;DebuggerDisplay&rsquo; attribute can come in handy and will replace the output of ToString() when hovering over the object in the debugger.</p>
+<p>The &lsquo;DebuggerDisplay&rsquo; attribute can be assigned to a class or a structure like so:</p>
+<ul>
+<li>Add a &lsquo;using System.Diagnostics;&rsquo; statement at the beginning of the file where the attribute will be used</li>
+<li>Tag the object with a [DebuggerDisplay(&ldquo;&lt;expression,...&gt;&rdquo;)] statement. The parameter string of the attribute is composed of comma-separated name-value pairs. The value is placed between curly braces can be a reference to a property of the class, a method call, or any valid C# expression</li>
+<li>When hovering over the class instance, the debugger will use the definition provided by the &lsquo;&rsquo;DebuggerDisplay&rsquo; attribute instead of the value returned by ToString()</li>
+</ul>
+<p><img src="media/PIX6T4/Images/Debugging/VCSharpDebuggerDisplayAttribute.png" alt="" height="506" /></p>
+<p></p>
+<h2>Using software breakpoints</h2>
+<p>While seldom used, it is possible for the application to break itself by using this statement:</p>
+<pre>Debugger.Break();</pre>
+<p>This may be interesting in situations where the conditions determining if the debugger should stop are complex, possibly involving the state of many variables and/or many iterations before the conditions leading to the issue being investigated manifests itself. In that case, it may be useful to create a function encapsulating all these conditions and the software breakpoint under the control of a single function like so:</p>
+<pre>#define SOFTBREAK
+using System.Diagnostics;
+&hellip;
+&nbsp; &nbsp; &nbsp; &nbsp; [Conditional("SOFTBREAK")]
+&nbsp; &nbsp; &nbsp; &nbsp; private static void CheckConditionsAndBreak(int foo, int bar, float baz, string message) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if( foo &lt; 0 &amp;&amp; bar &gt; 0 &amp;&amp; baz == 123.456 || message == "foobar") {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Debugger.Break();
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; &nbsp; }
+</pre>
+<pre></pre>
+<h2>Using the Immediate Window</h2>
+<p>When a program is stopped at a breakpoint, it&rsquo;s possible to use Visual C#&rsquo;s &ldquo;Immediate Window&rdquo; to execute debug commands instantly such as:</p>
+<ul>
+<li>Viewing the content of a variable or object using the &lsquo;?&rsquo; command</li>
+<li>Changing the content of a variable or property using the &lsquo;=&rsquo; assignment command</li>
+<li>Invoking an object method using the &lsquo;?&rsquo; command</li>
+</ul>
+<p>The &ldquo;Immediate Window&rdquo; interprets commands on the fly and shows the results immediately. The nice thing about it is that the entire scope of the application is accessible this way which is faster and easier than browsing and expanding objects from the Watch or the Locals Window.</p>
+<p><img src="media/PIX6T4/Images/Debugging/VCSharpImmediateWindow.png" alt="" height="305" /></p>
+<p></p>
+<h2>Checking for the presence of a debugger</h2>
+<p>It is possible to check within the application itself if it is running under the control of a debugger and alter the behavior accordingly using a simple test statement like this:</p>
+<pre>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (Debugger.IsAttached == true) { /*Do something else*/
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }
+</pre>
+<p></p>
+<h2>Configuring debugger options</h2>
+<p>Under the \Tools\Options menu, Visual C# has options to customize the behavior of the debugger. For instance, Visual C# has an option to &ldquo;Step over properties and operators&rdquo; which can be frustrating if you&rsquo;re not aware that it&rsquo;s there and you&rsquo;re trying to debug your own properties or custom operators. Hit F1 to bring up the online help explaining what these options do.</p>
+<p><img src="media/PIX6T4/Images/Debugging/VCSharpDebuggingOptionsGeneral.png" alt="" height="446" /></p>
+</article></div>
+        </div>
+            </div>
+</div>
+</div>
+<div id="layout-footer" class="group">
+    <footer id="footer">
+        <div id="footer-quad" class="group">
+                                            </div>
+        <div id="footer-sig" class="group">
+            <div class="zone zone-footer"><div class="bottomnav">
+    <a href="http://nwazet.com/shipping">Shipping</a> |
+    <a href="http://nwazet.com/returns">Returns, Refunds &amp; Exchanges</a> |
+    <a href="http://nwazet.com/privacy">Privacy</a> |
+    <a href="contact.html">Contact us</a>
+</div>
+<div class="credits">
+    <span id="osh">Open Source Hardware and Software</span> |
+    <span id="theme-credits">Theme by Frank Irlanda</span> |
+    <a href="http://nwazet.com" id="copyright">&#169; Nwazet 2011</a> |
+    <span id="poweredby">Powered by <a href="http://www.orchardproject.net" target="_blank">Orchard</a></span>
+</div>
+</div>
+        </div>
+    </footer>
+</div>
+</div>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-5109912-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</body>
+</html>

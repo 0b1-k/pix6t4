@@ -1,0 +1,273 @@
+
+<!DOCTYPE html> 
+<html lang="en-US" class="static detail-page contents"> 
+<head> 
+    <meta charset="utf-8" />
+    <title>PIX-6T4-Updating the Netduino Firmware</title> 
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans%7CSlackey&amp;subset=latin" rel="stylesheet" type="text/css" />
+<link href="Themes/PIX6T4/Styles/Site.css" rel="stylesheet" type="text/css" />
+<!--[if lt IE 9]>
+<script src="/Core/Shapes/scripts/html5.js" type="text/javascript"></script>
+<![endif]-->
+<meta content="Orchard" name="generator" />
+<meta content="IE=edge,chrome=1" name="X-UA-Compatible" />
+<link href="media/PIX6T4/favicon/favicon.gif" rel="shortcut icon" type="image/x-icon" />
+
+    <script>(function(d){d.className="dyn"+d.className.substring(6,d.className.length);})(document.documentElement);</script> 
+</head> 
+<body>
+
+
+<div id="layout-wrapper">
+<header id="layout-header" class="group">
+    <div id="header">
+        <div class="zone zone-header">
+<h1 id="branding">
+    <a href="index.html">
+        <span id="punchline">
+            <strong>PIX-6T4:</strong>
+            A Platform for Learning Digital Electronics and C#
+        </span>
+        <img id="logo" src="Themes/PIX6T4/Content/logo.gif" alt="PIX-6T4" />
+        <img id="revolution" src="Themes/PIX6T4/Content/revolution.gif" alt="Join the Maker Revolution!"/>
+        <img id="explode" src="Themes/PIX6T4/Content/explode.gif" alt="Build Your OWN Gaming Console!"/>
+    </a>
+</h1>
+
+<div class="user-display">
+        <span class="user-actions"><a href="Users/Account/LogOn%3FReturnUrl=%252Fflashing-the-console-bootloader.html" rel="nofollow">Sign In</a></span>
+</div>
+</div>
+    </div>
+</header>
+<div id="layout-navigation" class="group">
+    <div class="zone zone-navigation">
+<article class="widget-navigation widget-menu-widget widget">
+    
+<nav>
+    <ul class="menu menu-main-menu">
+        
+        
+<li class="first"><a href="index.html">Home</a>
+</li>
+<li><a href="http://nwazet.com/pix6t4">Buy</a>
+</li>
+<li><a href="blog.html">Blog</a>
+</li>
+<li><a href="video.html">Videos</a>
+</li>
+<li class="current last"><a href="docs.html">Docs</a>
+</li>
+    </ul>
+</nav>
+</article></div>
+</div>
+<div id="layout-main-container">
+<div id="layout-main" class="group">
+    <div id="layout-content" class="group">
+                        <div id="content" class="group">
+            <div class="zone zone-content">
+<article class="page content-item">
+    <header>
+        
+
+<h1>Updating the Netduino Firmware</h1>
+
+
+    </header>
+    <p>Secret Labs releases Netduino firmware updates regularly as new versions of the .Net Micro Framework come out and in order to benefit from these updates, it&rsquo;s&nbsp;necessary to update the Netduino&rsquo;s Flash memory. There are in fact two sections of the Netduino&rsquo;s Flash memory that may need to be updated, each with a&nbsp;different tool:</p>
+<ol>
+<li>The bootloader: a small program on the ARM processor&rsquo;s chip designed to initialize the fundamental hardware subsystems and bootstrap an operating system&nbsp;or a runtime such as the <a href="http://en.wikipedia.org/wiki/.NET_Micro_Framework" target="_blank">.Net Micro Framework</a>.</li>
+<li>The .Net Micro Framework: is composed of a set of binary files making up the <a href="http://en.wikipedia.org/wiki/Common_language_runtime" target="_blank">Common Language Runtime</a>, the engine capable of running compiled .Net applications written in languages such as C# or VB.Net.&nbsp;Every once in a while, SecretLabs makes changes to the Netduino port of the .Net Micro Framework which also requires flashing the bootloader first.</li>
+</ol>
+<p></p>
+<h2>Flashing the Netduino mini bootloader</h2>
+<p>Atmel provides a tool called the &lsquo;SAM Boot Assistant&rsquo; (SAM-BA) which is designed for tasks such as flashing bootloaders on their chips. For the Netduino mini,&nbsp;we&rsquo;re going to need the version of SAM-BA designed to work over a RS232 serial interface which you can download and install from there Atmel site <a href="http://www.atmel.com/dyn/resources/prod_documents/Install_AT91-ISP_v1.13.exe" target="_blank">here</a>.&nbsp;For reference, here&rsquo;s the page on the Atmel site listing <a href="http://www.atmel.com/dyn/products/tools_card.asp?tool_id=3784" target="_blank">all the SAM-BA versions</a>.</p>
+<p></p>
+<h2>Erasing the Netduino mini</h2>
+<p>Before running SAM-BA to flash a bootloader, you need to erase the Netduino&rsquo;s flash by connecting PIN 21 (5 volts) to the tiny gold pad near PIN 12 for a couple&nbsp;seconds.</p>
+<p><img src="media/PIX6T4/Images/Flashing/netduino&#32;mini&#32;-&#32;5v&#32;to&#32;gold&#32;pad.png" alt="" height="153" /></p>
+<p>Once that&rsquo;s done, start SAM-BA v2.9. A small dialog box will prompt you for a connection and a board.</p>
+<ul>
+<li>For the connection, select the same COM port configured for the debugger / VC# deployments in Appendix D.</li>
+<li>For the board, select &ldquo;at91sam7x512-ek&rdquo;.</li>
+<li>Click &lsquo;Connect&rdquo;</li>
+</ul>
+<p><img src="media/PIX6T4/Images/Flashing/SAMBA-startup.png" alt="" height="165" /></p>
+<p>If the following dialog box appears, it means that you chip wasn&rsquo;t erased and you will need to redo the steps in the &ldquo;<strong>Erasing the Netduino mini</strong>&rdquo; section above:</p>
+<p><img src="media/PIX6T4/Images/Flashing/SAMBA-chip&#32;not&#32;erased.png" alt="" height="137" /></p>
+<p>If the chip was erased properly, the main SAM-BA window will appear:</p>
+<p><img src="media/PIX6T4/Images/Flashing/SAMBA-main.png" alt="" width="691" height="807" /></p>
+<p>In the &ldquo;Scripts&rdquo; drop-down, select &ldquo;Boot from Flash (GPNVM2)&rdquo; and click &ldquo;Execute&rdquo;. SAM-BA should respond with:</p>
+<p></p>
+<pre>(AT91-ISP v1.13) 1 % FLASH::ScriptGPNMV 4
+-I- GPNVM2 set
+</pre>
+<p></p>
+<p>&nbsp;In the &ldquo;Scripts&rdquo; drop-down, select &ldquo;Enable Flash access&rdquo; and click &ldquo;Execute&rdquo;. SAM-BA should respond with:</p>
+<p></p>
+<pre>(AT91-ISP v1.13) 1 % FLASH::Init
+-I- Loading applet isp-flash-at91sam7x512.bin at address 0x202000
+-I- Memory Size : 0x80000 bytes
+-I- Buffer address : 0x202CD4
+-I- Buffer size: 0x1D200 bytes
+-I- Applet initialization done
+</pre>
+<p></p>
+<p>At this point, you will need to download the proper Netduino mini firmware from the Netduino.com community forums. Depending, on the version of the firmware&nbsp;that you want to install, you will need to choose either the official one or an Alpha/Beta version. At the time of this writing, we&rsquo;re using v4.1.1 Beta 1 located <a href="http://forums.netduino.com/index.php?/topic/1594-netduino-mini-firmware-v411-beta-1/" target="_blank">here</a>.&nbsp;Because we&rsquo;re working with an RS232 connection for deployments, we need to download the firmware using RS232 as the <a href="http://forums.netduino.com/index.php?app=core&amp;module=attach&amp;section=attach&amp;attach_id=722" target="_blank">default deployment interface</a>.&nbsp;Once downloaded, open up the zip file and drag its content to a temporary folder of your choice. Let&rsquo;s assume &ldquo;D:\netduino mini&rdquo; for example. The zip file contains&nbsp;the following files and folders:</p>
+<ul>
+<li><span class="Apple-tab-span" style="white-space: pre;"> </span>A folder named &ldquo;tinyclr.hex&rdquo;</li>
+<li><span class="Apple-tab-span" style="white-space: pre;"> </span>A file named &ldquo;TinyBooterDecompressor.bin&rdquo;</li>
+</ul>
+<p>In the SAM-BA window, in the &ldquo;Download / Upload file&rdquo; section, open the file selection dialog, navigate to the location where &ldquo;TinyBooterDecompressor.bin&rdquo; is and&nbsp;select it:</p>
+<p><img src="media/PIX6T4/Images/Flashing/SAMBA-sendfile.png" alt="" height="95" /></p>
+<p>Click &ldquo;Send File&rdquo;. A dialog with an hourglass will appear while the file is being uploaded to the netduino&rsquo;s flash.</p>
+<p><img src="media/PIX6T4/Images/Flashing/SAMBA-upload.png" alt="" height="125" /></p>
+<p>When the upload completes, SAM-BA will ask about locking the regions of flash memory which were just updated. Locking the flash pages which were just written&nbsp;is not required so just click &ldquo;No&rdquo;:</p>
+<p><img src="media/PIX6T4/Images/Flashing/SAMBA-lock&#32;regions.png" alt="" height="138" /></p>
+<p>At the end of the procedure, the following should be visible in SAM-BA&rsquo;s output window:</p>
+<p></p>
+<pre>(AT91-ISP v1.13) 1 % send_file {Flash} "D:/netduino mini/TinyBooterDecompressor.bin" 0x100000 0
+-I- Send File D:/netduino mini/TinyBooterDecompressor.bin at address 0x100000
+first_sector 0 last_sector 2&nbsp;
+-I- &nbsp;Writing: 0x8C34 bytes at 0x0 (buffer addr : 0x202CD4)
+-I- &nbsp;0x8C34 bytes written by applet
+</pre>
+<p>We&rsquo;re done with SAM-BA, so close it.&nbsp;</p>
+<p><span class="Apple-style-span" style="white-space: normal;">Turn off the Pix-6T4 console, wait a couple seconds, then turn it back on.</span></p>
+<p></p>
+<h2>Flashing SecretLabs&rsquo; .Net Micro Framework</h2>
+<p>The next step in the process is to flash the Netduino mini with a fresh copy of the .Net Micro Framework which is located under the folder named &ldquo;tinyclr.hex&rdquo; we&nbsp;downloaded earlier.</p>
+<ul>
+<li>Start MFDeploy.exe.&nbsp;</li>
+<li>In the &ldquo;Device&rdquo; section, select &ldquo;Serial&rdquo; and the COM port assigned to the debugger / VC# deployments.</li>
+<li>In the &ldquo;Image File&rdquo; section, click &ldquo;Browse&rdquo; and navigate to the folder where you downloaded the firmware earlier (&ldquo;D:\netduino mini\tinyclr.hex&rdquo; in this example).</li>
+<li>Select both of these files: "ER_CONFIG" and "ER_FLASH"</li>
+<li>Click &ldquo;Deploy&rdquo;</li>
+<li>MFDeploy will show a dialog with a progress bar while the firmware is being uploaded:</li>
+</ul>
+<p><img src="media/PIX6T4/Images/Flashing/MFDeploy-tinyCLR.png" alt="" height="575" /></p>
+<p>Once the upload completes, MFDeploy will show text similar to this in its output window:</p>
+<pre>Chk signature
+Signature PASS
+Chk signature
+Signature PASS
+.NetMF v4.1.2821.0
+NetduinoMini, Build Date: Mar 26 2011 02:02:39
+ARM Compiler version 400902
+TinyCLR (Build 4.1.2821.0)
+Starting...
+Created EE.
+Started Hardware.
+Found debugger!
+Create TS.
+&nbsp;Loading start at 1380ac, end 14a4f0
+Attaching file.
+Assembly: mscorlib (4.1.2821.0) (3880 RAM - 33236 ROM - 19134 METADATA)
+Attaching file.
+Assembly: Microsoft.SPOT.Native (4.1.2821.0) (1144 RAM - 6516 ROM - 4479 METADATA)
+Attaching file.
+Assembly: Microsoft.SPOT.Hardware (4.1.2821.0) (1760 RAM - 11552 ROM - 7395 METADATA)
+Attaching file.
+Assembly: Microsoft.SPOT.Hardware.SerialPort (4.1.2821.0) (512 RAM - 3488 ROM - 1543 METADATA)
+Attaching file.
+Assembly: Microsoft.SPOT.IO (4.1.2821.0) (740 RAM - 4620 ROM - 2522 METADATA)
+Attaching file.
+Assembly: System.IO (4.1.2821.0) (1548 RAM - 13292 ROM - 5862 METADATA)
+Attaching file.
+Assembly: SecretLabs.NETMF.Hardware (4.1.0.0) (256 RAM - 1108 ROM - 491 METADATA)
+Attaching file.
+Assembly: SecretLabs.NETMF.Diagnostics (4.1.0.0) (180 RAM - 440 ROM - 166 METADATA)
+Attaching file.
+Assembly: SecretLabs.NETMF.IO (4.1.0.0) (220 RAM - 564 ROM - 279 METADATA)
+Loading Deployment Assemblies.
+Resolving.
+
+Total: (8768 RAM - 74816 ROM - 41871 METADATA)
+
+Total: (8768 RAM - 74816 ROM - 41871 METADATA)
+Ready.
+Cannot find any entrypoint!
+Done.
+Waiting for debug commands...
+</pre>
+<p></p>
+<p>&nbsp;In the &ldquo;Plug-In&rdquo; menu, select &ldquo;Debug\Show Device Info&rdquo; and verify that the firmware version is correct (in bold below):</p>
+<p></p>
+<pre>DeviceInfo:
+&nbsp; HAL build info: 4.1.2821.0, Netduino Mini (v4.1.1.0 b1) by Secret Labs LLC
+&nbsp; OEM Product codes (vendor, model, SKU): 34, 177, 4098
+&nbsp; Serial Numbers (module, system):
+&nbsp; &nbsp; 00000000000000000000000000000000
+&nbsp; &nbsp; 0000000000000000
+&nbsp; Solution Build Info: 4.1.1.0, Netduino Mini (v4.1.1.0 b1) by Secret Labs LLC
+&nbsp; AppDomains:
+&nbsp; &nbsp; default, id=1
+&nbsp; Assemblies:
+&nbsp; &nbsp; mscorlib,4.1.2821.0
+&nbsp; &nbsp; Microsoft.SPOT.Native,4.1.2821.0
+&nbsp; &nbsp; Microsoft.SPOT.Hardware,4.1.2821.0
+&nbsp; &nbsp; Microsoft.SPOT.Hardware.SerialPort,4.1.2821.0
+&nbsp; &nbsp; Microsoft.SPOT.IO,4.1.2821.0
+&nbsp; &nbsp; System.IO,4.1.2821.0
+&nbsp; &nbsp; SecretLabs.NETMF.Hardware,4.1.0.0
+&nbsp; &nbsp; SecretLabs.NETMF.Diagnostics,4.1.0.0
+&nbsp; &nbsp; SecretLabs.NETMF.IO,4.1.0.0</pre>
+<p>We are done with MFDeploy, so close it.</p>
+<p></p>
+<h2>Flashing the Pix-6T4 Console Bootloader</h2>
+<p>This final step will restore the Pix-6T4 console to its original state by re-installing the bootloader application allowing the console to load and start games.</p>
+<ul>
+<li>Locate the ConsoleBootLoader project folder</li>
+<li>Open the ConsoleBootLoader.sln project.</li>
+<li>Once in VC#, ensure that the project properties are configured properly to deploy serially over the proper COM port.</li>
+<li>Right-click on the &ldquo;ConsoleBootLoader&rdquo; project in the &ldquo;Solution Explorer&rdquo; and select &ldquo;Deploy&rdquo;</li>
+</ul>
+<div><img src="media/PIX6T4/Images/Flashing/VCSharpConsoleBootloaderDeploy.png" alt="" height="420" /></div>
+<ul>
+<li>VC# will recompile the project and will deploy it to the Netduino mini.</li>
+<li>Turn off the console, then turn it back on with an SD card containing game cartridges in it.</li>
+<li>If all is well, it should boot to the game selection menu.</li>
+</ul>
+</article></div>
+        </div>
+            </div>
+</div>
+</div>
+<div id="layout-footer" class="group">
+    <footer id="footer">
+        <div id="footer-quad" class="group">
+                                            </div>
+        <div id="footer-sig" class="group">
+            <div class="zone zone-footer"><div class="bottomnav">
+    <a href="http://nwazet.com/shipping">Shipping</a> |
+    <a href="http://nwazet.com/returns">Returns, Refunds &amp; Exchanges</a> |
+    <a href="http://nwazet.com/privacy">Privacy</a> |
+    <a href="contact.html">Contact us</a>
+</div>
+<div class="credits">
+    <span id="osh">Open Source Hardware and Software</span> |
+    <span id="theme-credits">Theme by Frank Irlanda</span> |
+    <a href="http://nwazet.com" id="copyright">&#169; Nwazet 2011</a> |
+    <span id="poweredby">Powered by <a href="http://www.orchardproject.net" target="_blank">Orchard</a></span>
+</div>
+</div>
+        </div>
+    </footer>
+</div>
+</div>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-5109912-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</body>
+</html>
